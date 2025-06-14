@@ -8,7 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
     <meta charset="UTF-8">
     <title>ProPulse</title>
-    <link rel="stylesheet" href="public/assets/style.css"> <!-- Ajuste o caminho conforme seu projeto -->
+    <link rel="stylesheet" href="public/assets/style.css"> 
+    
 </head>
 <body>
     <header>

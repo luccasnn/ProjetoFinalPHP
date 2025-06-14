@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 // view/home.php
 // Página pública inicial com botões e serviços
 ?>
@@ -24,7 +24,7 @@
             <button type="submit">Buscar</button>
         </form>
     </header>
-    <?php require_once __DIR__ . '/header.php'; ?>
+    
 
     <main>
         <section>
@@ -49,6 +49,40 @@
             </div>
         </section>
     </main>
-    <?php require_once __DIR__ . '/footer.php'; ?>
+    
 </body>
-</html>
+</html> -->
+<?php
+// view/home.php
+
+$tituloPagina = "Página Inicial";
+require_once __DIR__ . '/header.php';
+?>
+
+<main>
+    <section>
+        <link rel="stylesheet" href="public/assets/style.css">
+        <h2>Serviços Oferecidos</h2>
+        <div class="servicos">
+            <div class="servico">
+                <img src="public/assets/img/servicos/img-1.jpg" alt="Montagem de Móveis">
+                <p><a href="?url=ver-servico&tipo=montagem">Montagem de Móveis</a></p>
+            </div>
+            <div class="servico">
+                <img src="public/assets/img/fornecedores/img-1.jpg" alt="Mudanças">
+                <p><a href="?url=ver-servico&tipo=mudanca">Mudanças</a></p>
+            </div>
+            <div class="servico">
+                <img src="public/assets/img/fornecedores/img-2.jpg" alt="Pedreiro">
+                <p><a href="?url=ver-servico&tipo=pedreiro">Serviço de Pedreiro</a></p>
+            </div>
+            <div class="servico">
+                <img src="public/assets/img/fornecedores/img-3.jpg" alt="Diaristas">
+                <p><a href="?url=ver-servico&tipo=diarista">Diaristas</a></p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<?php require_once __DIR__ . '/footer.php'; ?>
+
