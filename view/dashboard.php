@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<?php require_once __DIR__ . '/header.php'; ?>    
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -11,5 +12,9 @@
         <p>Você está logado. Use o menu para acessar os serviços.</p>
         <p><a href="index.php" class="btn">← Voltar para Início</a></p>
     </main>
+    <?php require_once __DIR__ . '/footer.php'; ?>
 </body>
 </html>
+
+
+

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<?php require_once __DIR__ . '/header.php'; ?>
     <meta charset="UTF-8">
     <title>Serviço</title>
     <link rel="stylesheet" href="public/assets/style.css">
@@ -23,5 +24,7 @@
         }
         ?>
     </main>
+<?php require_once __DIR__ . '/footer.php'; ?>
 </body>
 </html>
+

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<?php require_once __DIR__ . '/header.php'; ?>
 <head>
     <meta charset="UTF-8">
     <title>Sobre</title>
@@ -13,6 +14,6 @@
 <h2>Sobre o ProPulse</h2>
 <p>Somos uma plataforma que conecta profissionais a clientes em busca de serviços confiáveis e de qualidade.</p>
 <p>Entre em contato conosco para mais informações.</p>
-
+<?php require_once __DIR__ . '/footer.php'; ?>
 </body>
 </html>

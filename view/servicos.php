@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<?php require_once __DIR__ . '/header.php'; ?>
+    
 <head>
     <meta charset="UTF-8">
     <title>Servicos</title>
@@ -19,5 +21,8 @@
     <li><a href="?url=ver-servico&tipo=diarista">Diarista</a></li>
 </ul>
 
+<?php require_once __DIR__ . '/footer.php'; ?>
 </body>
 </html>
+
+
