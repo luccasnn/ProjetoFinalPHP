@@ -46,9 +46,12 @@ switch ($pagina) {
         UsuarioController::logout();
         break;
 
+    // case 'seja-profissional':
+    //     require __DIR__ . '/view/seja_profissional.php';
+    //     break;
     case 'seja-profissional':
-        require __DIR__ . '/view/seja_profissional.php';
-        break;
+    (new ProfissionalController())->novo();
+    break;
 
     case 'ver-servico':
         require __DIR__ . '/view/ver_servico.php';

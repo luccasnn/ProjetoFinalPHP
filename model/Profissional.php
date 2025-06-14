@@ -31,7 +31,7 @@ class Profissional {
             $dados['especialidade'], $dados['descricao'], $dados['cidade']
         ]);
     }
-
+   
     public function atualizar($id, $dados) {
         $sql = "UPDATE profissionais SET nome=?, email=?, telefone=?, especialidade=?, descricao=?, cidade=? WHERE id=?";
         $stmt = $this->pdo->prepare($sql);
@@ -40,6 +40,7 @@ class Profissional {
             $dados['especialidade'], $dados['descricao'], $dados['cidade'], $id
         ]);
     }
+    
 
     public function excluir($id) {
         $stmt = $this->pdo->prepare("DELETE FROM profissionais WHERE id = ?");

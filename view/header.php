@@ -23,6 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <li><strong>Olá, <?= htmlspecialchars($_SESSION['usuario']['nome']) ?></strong></li>
                     <li><a href="index.php?url=dashboard">Painel</a></li>
+                    <li><a href="?url=seja-profissional">Seja um Profissional</a></li>
                     <li><a href="index.php?url=logout">Sair</a></li>
                 <?php else: ?>
                     <li><a href="index.php?url=login">Entrar</a></li>
