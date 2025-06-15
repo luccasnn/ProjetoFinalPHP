@@ -144,6 +144,22 @@ class UsuarioController {
     require __DIR__ . '/../view/profissional/novo.php';
     }
 
+    public static function index() {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $pdo->query("SELECT * FROM usuarios");
+            $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            require __DIR__ . '/../view/admin/usuarios/index.php';
+
+        } catch (PDOException $e) {
+            die("Erro na conexão com o banco: " . $e->getMessage());
+        }
+    }
+
+
     public static function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';

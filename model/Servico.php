@@ -24,20 +24,36 @@ class Servico {
     }
 
     public function cadastrar($dados) {
+        $ativo = isset($dados['ativo']) && ($dados['ativo'] == 'on' || $dados['ativo'] == '1') ? 1 : 0;
         $sql = "INSERT INTO servicos (titulo, descricao, icone, ativo) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            $dados['titulo'], $dados['descricao'], $dados['icone'], $dados['ativo']
+            $dados['titulo'], 
+            $dados['descricao'] ?? null, 
+            $dados['icone'] ?? null, 
+            $ativo
         ]);
     }
 
     public function atualizar($id, $dados) {
+        $ativo = isset($dados['ativo']) && ($dados['ativo'] == 'on' || $dados['ativo'] == '1') ? 1 : 0;
         $sql = "UPDATE servicos SET titulo=?, descricao=?, icone=?, ativo=? WHERE id=?";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            $dados['titulo'], $dados['descricao'], $dados['icone'], $dados['ativo'], $id
+            $dados['titulo'], 
+            $dados['descricao'] ?? null, 
+            $dados['icone'] ?? null, 
+            $ativo, 
+            $id
         ]);
     }
+    public function listarAtivos() {
+        $stmt = $this->pdo->prepare("SELECT id, titulo FROM servicos WHERE ativo = 1");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
     public function excluir($id) {
         $stmt = $this->pdo->prepare("DELETE FROM servicos WHERE id = ?");
