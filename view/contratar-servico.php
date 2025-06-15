@@ -38,6 +38,22 @@
     <textarea id="detalhes" name="detalhes" rows="4" placeholder="Informe mais detalhes sobre o que deseja"></textarea>
 
     <button type="submit">Enviar pedido</button>
+    <a href="/ProjetoFinalPHP/index.php" style="
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:blue;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+" onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'">
+    Voltar ao Início
+</a>
+
+
 </form>
 
 </body>
