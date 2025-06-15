@@ -83,7 +83,7 @@ switch ($pagina) {
 
     case 'contratar-servico':
         if ($subpagina === null) {
-            require __DIR__ . '/view/contratar_servico.php';
+            require __DIR__ . '/view/contratar-servico.php';
         } else {
             http_response_code(404);
             echo "<h1>Erro 404 - Página não encontrada</h1>";
@@ -91,7 +91,7 @@ switch ($pagina) {
         break;
     case 'contratar':
         if ($subpagina === 'servico') {
-            require __DIR__ . '/view/contratar_servico.php';
+            require __DIR__ . '/view/contratar-servico.php';
         } else {
             http_response_code(404);
             echo "<h1>Erro 404 - Página não encontrada</h1>";
