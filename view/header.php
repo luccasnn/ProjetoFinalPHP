@@ -9,7 +9,6 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <title>ProPulse</title>
     <link rel="stylesheet" href="public/assets/style.css"> 
-    
 </head>
 <body>
     <header>
@@ -23,7 +22,13 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <li><strong>Olá, <?= htmlspecialchars($_SESSION['usuario']['nome']) ?></strong></li>
                     <li><a href="index.php?url=dashboard">Painel</a></li>
-                    <li><a href="?url=seja-profissional">Seja um Profissional</a></li>
+
+                    <?php if (!empty($_SESSION['usuario']['eh_profissional'])): ?>
+                        <li><a href="index.php?url=servicos-admin/novo">Adicionar Serviço</a></li>
+                    <?php else: ?>
+                        <li><a href="index.php?url=profissional/novo">Seja um Profissional</a></li>
+                    <?php endif; ?>
+
                     <li><a href="index.php?url=logout">Sair</a></li>
                 <?php else: ?>
                     <li><a href="index.php?url=login">Entrar</a></li>
