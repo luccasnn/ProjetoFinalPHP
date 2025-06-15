@@ -5,6 +5,7 @@ require_once __DIR__ . '/../model/Usuario.php';
 class UsuarioController {
 
 
+<<<<<<< HEAD
     // public static function login() {
     //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //         $email = $_POST['email'] ?? '';
@@ -144,11 +145,14 @@ class UsuarioController {
     require __DIR__ . '/../view/profissional/novo.php';
     }
 
+=======
+>>>>>>> b16894535eda5b3bf3035618149f06904d2ede14
     public static function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $senha = $_POST['senha'] ?? '';
             $usuario = (new Usuario())->autenticar($email, $senha);
+<<<<<<< HEAD
                 
             if ($usuario) {
                 require_once __DIR__ . '/../helpers/helpers.php';
@@ -159,6 +163,10 @@ class UsuarioController {
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['usuario']['eh_profissional'] = usuarioEhProfissional($email);
 
+=======
+            if ($usuario) {
+                $_SESSION['usuario'] = $usuario;
+>>>>>>> b16894535eda5b3bf3035618149f06904d2ede14
                 setcookie("usuario_logado", $usuario['nome'], time() + 3600, "/");
                 header("Location: index.php");
                 exit;
@@ -167,7 +175,10 @@ class UsuarioController {
                 require __DIR__ . '/../view/usuario/login.php';
             }
         } else {
+<<<<<<< HEAD
             $erro = '';
+=======
+>>>>>>> b16894535eda5b3bf3035618149f06904d2ede14
             require __DIR__ . '/../view/usuario/login.php';
         }
     }
