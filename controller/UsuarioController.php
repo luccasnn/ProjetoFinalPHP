@@ -160,6 +160,33 @@ class UsuarioController {
     }
 
 
+    // public static function login() {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $email = $_POST['email'] ?? '';
+    //         $senha = $_POST['senha'] ?? '';
+    //         $usuario = (new Usuario())->autenticar($email, $senha);
+                
+    //         if ($usuario) {
+    //             require_once __DIR__ . '/../helpers/helpers.php';
+
+    //             if (session_status() === PHP_SESSION_NONE) {
+    //                 session_start();
+    //             }
+    //             $_SESSION['usuario'] = $usuario;
+    //             $_SESSION['usuario']['eh_profissional'] = usuarioEhProfissional($email);
+
+    //             setcookie("usuario_logado", $usuario['nome'], time() + 3600, "/");
+    //             header("Location: index.php");
+    //             exit;
+    //         } else {
+    //             $erro = "Usuário ou senha inválidos.";
+    //             require __DIR__ . '/../view/usuario/login.php';
+    //         }
+    //     } else {
+    //         $erro = '';
+    //         require __DIR__ . '/../view/usuario/login.php';
+    //     }
+    // }
     public static function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
@@ -175,7 +202,9 @@ class UsuarioController {
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['usuario']['eh_profissional'] = usuarioEhProfissional($email);
 
+                // Aqui o cookie está criado logo após a sessão e antes do redirecionamento
                 setcookie("usuario_logado", $usuario['nome'], time() + 3600, "/");
+
                 header("Location: index.php");
                 exit;
             } else {
