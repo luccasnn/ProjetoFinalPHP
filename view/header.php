@@ -18,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li><a href="index.php?url=home">Início</a></li>
                 <li><a href="index.php?url=servicos">Serviços</a></li>
                 <li><a href="index.php?url=sobre">Sobre</a></li>
-                <li><a href="index.php?url=contratar-servico">Contratar um Serviço</a></li>
+                <li><a href="index.php?url=agendamento">Contratar um Serviço</a></li>
 
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <li><strong>Olá, <?= htmlspecialchars($_SESSION['usuario']['nome']) ?></strong></li>

@@ -58,6 +58,21 @@ class Servico {
     public function excluir($id) {
         $stmt = $this->pdo->prepare("DELETE FROM servicos WHERE id = ?");
         return $stmt->execute([$id]);
+
     }
+    public static function buscarTodos() {
+        global $pdo;
+        $stmt = $pdo->query("SELECT * FROM servicos");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function buscarPorId($id) {
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT * FROM servicos WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    
 }
 ?>

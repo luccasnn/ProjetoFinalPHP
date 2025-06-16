@@ -14,6 +14,7 @@ require_once __DIR__ . '/config/banco.php';
 require_once __DIR__ . '/controller/UsuarioController.php';
 require_once __DIR__ . '/controller/FeedbackController.php';
 require_once __DIR__ . '/controller/ServicoController.php';
+require_once __DIR__ . '/controller/AgendamentoController.php'; // Certifique-se de incluir se usar
 
 // Roteamento
 $url = $_GET['url'] ?? 'home';
@@ -31,9 +32,9 @@ switch ($pagina) {
         require __DIR__ . '/view/home.php';
         break;
 
-        case 'sobre':
-    require __DIR__ . '/view/sobre.php';
-    break;
+    case 'sobre':
+        require __DIR__ . '/view/sobre.php';
+        break;
 
     case 'servicos':
         if ($subpagina === null) {
@@ -49,7 +50,7 @@ switch ($pagina) {
                 case 'excluir':
                     ServicoController::excluir();
                     break;
-                case 'admin':  // <--- Adicione esta linha
+                case 'admin':  // Se precisar deste caso, mantenha
                     ServicoController::index();
                     break;
                 default:
@@ -59,12 +60,9 @@ switch ($pagina) {
             }
         }
         break;
-    
+
     case 'contratar-servico-enviar':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Aqui você pode salvar o pedido no banco, enviar email, etc.
-            // Por enquanto, só vamos mostrar uma mensagem simples.
-
             $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             $servicoId = filter_input(INPUT_POST, 'servico', FILTER_VALIDATE_INT);
@@ -93,6 +91,7 @@ switch ($pagina) {
             echo "<h1>Erro 404 - Página não encontrada</h1>";
         }
         break;
+
     case 'contratar':
         if ($subpagina === 'servico') {
             require __DIR__ . '/view/contratar-servico.php';
@@ -131,37 +130,17 @@ switch ($pagina) {
             echo "<h1>Erro 404 - Página não encontrada</h1>";
         }
         break;
-    case 'admin':
-        $subpagina = $url[1] ?? null;
 
-        switch ($subpagina) {
-            case 'servicos':
-                // Lista os serviços cadastrados
-                ServicoController::index();
-                break;
-            case 'servicos-novo':
-                // Formulário e ação para criar novo serviço
-                ServicoController::novo();
-                break;
-            case 'servicos-editar':
-                // Editar serviço
-                ServicoController::editar();
-                break;
-            case 'servicos-excluir':
-                // Excluir serviço
-                ServicoController::excluir();
-                break;
-            default:
-                echo "<h1>Painel Admin</h1>";
-                echo "<p>Selecione uma opção.</p>";
-                break;
+    case 'admin':
+        // Proteção da área admin:
+        if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
+            header('Location: admin-login.php');
+            exit;
         }
-        break;
-    case 'admin':
+
         $subpagina = $url[1] ?? null;
 
         switch ($subpagina) {
-            // Serviços admin
             case 'servicos':
                 ServicoController::index();
                 break;
@@ -174,8 +153,6 @@ switch ($pagina) {
             case 'servicos-excluir':
                 ServicoController::excluir();
                 break;
-
-            // Usuários admin
             case 'usuarios':
                 UsuarioController::index();
                 break;
@@ -188,6 +165,35 @@ switch ($pagina) {
             case 'usuarios-excluir':
                 UsuarioController::excluir();
                 break;
+            default:
+                echo "<h1>Painel Admin</h1>";
+                echo "<p>Selecione uma opção.</p>";
+                break;
+        }
+        break;
+
+    case 'agendamento':
+        $subpagina = $url[1] ?? null;
+        $param = $url[2] ?? null;
+
+        switch ($subpagina) {
+            case null:
+            case 'servicos':
+                AgendamentoController::listarServicos();
+                break;
+
+            case 'formulario':
+                if ($param) {
+                    AgendamentoController::formularioAgendamento($param);
+                } else {
+                    http_response_code(404);
+                    echo "<h1>Erro 404 - Serviço não especificado</h1>";
+                }
+                break;
+
+            case 'salvar':
+                AgendamentoController::salvarAgendamento();
+                break;
 
             default:
                 http_response_code(404);
@@ -195,26 +201,9 @@ switch ($pagina) {
                 break;
         }
         break;
-    case 'usuarios-admin':
-        if ($subpagina === null) {
-            UsuarioController::index();
-        } else {
-            switch ($subpagina) {
-                case 'novo':
-                    UsuarioController::novo();
-                    break;
-                case 'editar':
-                    UsuarioController::editar();
-                    break;
-                case 'excluir':
-                    UsuarioController::excluir();
-                    break;
-                default:
-                    http_response_code(404);
-                    echo "<h1>Erro 404 - Página não encontrada</h1>";
-                    break;
-            }
-        }
+
+    case 'meus-agendamentos':
+        AgendamentoController::listarAgendamentosUsuario();
         break;
 
     case 'login':
