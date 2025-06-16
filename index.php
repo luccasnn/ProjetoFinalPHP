@@ -31,6 +31,10 @@ switch ($pagina) {
         require __DIR__ . '/view/home.php';
         break;
 
+        case 'sobre':
+    require __DIR__ . '/view/sobre.php';
+    break;
+
     case 'servicos':
         if ($subpagina === null) {
             require __DIR__ . '/view/servicos.php';

@@ -19,14 +19,18 @@
 <p>Agradecemos por utilizar o ProPulse e esperamos que a experiência seja enriquecedora tanto no uso da ferramenta quanto no aprendizado técnico envolvido em sua construção.</p>
 
 <a href="/ProjetoFinalPHP/index.php" style="
-    display:inline-block;
-    margin-top:20px;
-    padding:10px 20px;
-    background-color:#007BFF;
-    color:white;
-    text-decoration:none;
-    border-radius:5px;
-">Voltar à Página Inicial</a>
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:blue;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s;
+" onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'">
+    Voltar ao Início
 
 <?php require_once __DIR__ . '/footer.php'; ?>
 </body>
