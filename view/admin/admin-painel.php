@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     header('Location: admin-login.php');
     exit;
@@ -19,6 +21,8 @@ if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
 <ul>
     <li><a href="?url=admin/usuarios">Gerenciar Usuários</a></li>
     <li><a href="?url=admin/servicos">Gerenciar Serviços</a></li>
+    <li><a href="?url=admin/agendamentos">Gerenciar Agendamentos</a></li>
+    
 </ul>
 </body>
 </html>

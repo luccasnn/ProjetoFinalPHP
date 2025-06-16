@@ -19,6 +19,12 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li><a href="index.php?url=servicos">Serviços</a></li>
                 <li><a href="index.php?url=sobre">Sobre</a></li>
                 <li><a href="index.php?url=agendamento">Contratar um Serviço</a></li>
+                <?php if (isset($_SESSION['admin_logado']) && $_SESSION['admin_logado'] === true): ?>
+                    <li><a href="?url=painel">Painel Admin</a></li>
+                    <li><a href="?url=admin-logout">Sair Admin</a></li>
+                <?php else: ?>
+                    <li><a href="?url=admin-login">Área Admin</a></li>
+                <?php endif; ?>
 
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <li><strong>Olá, <?= htmlspecialchars($_SESSION['usuario']['nome']) ?></strong></li>

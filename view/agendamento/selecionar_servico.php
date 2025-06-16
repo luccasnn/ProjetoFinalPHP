@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../header.php'; ?>
 <h1>Selecione um serviço para agendar</h1>
 
 <ul>
@@ -8,4 +9,6 @@
         </a>
     </li>
 <?php endforeach; ?>
+<?php require_once __DIR__ . '/../footer.php'; ?>
 </ul>
+

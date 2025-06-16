@@ -35,5 +35,15 @@ class Agendamento {
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function listarTodos() {
+    $sql = "SELECT a.*, u.nome as usuario_nome 
+            FROM agendamentos a 
+            JOIN usuarios u ON a.usuario_id = u.id 
+            JOIN servicos s ON a.servico_id = s.id";
+    $stmt = $this->pdo->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 }
 ?>

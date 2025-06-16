@@ -1,13 +1,25 @@
 <?php
-require_once __DIR__ . '/../model/Agendamento.php';
+require_once __DIR__ . '/../model/Usuario.php';
 require_once __DIR__ . '/../model/Servico.php';
+require_once __DIR__ . '/../model/Agendamento.php';
 
 class AgendamentoController {
+
+    public static function index() {
+        $model = new Agendamento();
+        $agendamentos = $model->listarTodos();  // usar método do model que já está correto
+        $viewPath = __DIR__ . '/../view/admin/agendamentos/index.php';
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "<h1>Erro: arquivo de visualização não encontrado.</h1>";
+        }
+    }
+
     public static function listarServicos() {
         $servicoModel = new Servico();
         $servicos = $servicoModel->listarAtivos();
 
-        // Verifique se o arquivo existe antes de incluir
         $viewPath = __DIR__ . '/../view/agendamento/selecionar_servico.php';
         if (file_exists($viewPath)) {
             require $viewPath;
@@ -15,6 +27,8 @@ class AgendamentoController {
             echo "<h1>Erro: arquivo de visualização não encontrado.</h1>";
         }
     }
+
+    // Removido método listarTodosComDetalhes daqui porque não deve estar no controller, e sim no model
 
     public static function formularioAgendamento($servico_id) {
         $servicoModel = new Servico();
@@ -67,6 +81,11 @@ class AgendamentoController {
             echo "<h1>Método não permitido.</h1>";
         }
     }
+    public function listarTodos() {
+        $sql = "SELECT * FROM agendamentos ORDER BY data_agendamento DESC, hora_agendamento DESC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public static function listarAgendamentosUsuario() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -86,6 +105,13 @@ class AgendamentoController {
         } else {
             echo "<h1>Erro: arquivo de visualização não encontrado.</h1>";
         }
+    }
+
+    public static function excluir($id) {
+        $agendamentoModel = new Agendamento();
+        $agendamentoModel->excluir($id);
+        header("Location: ?url=admin-agendamentos");
+        exit;
     }
 }
 ?>

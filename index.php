@@ -92,6 +92,42 @@ switch ($pagina) {
         }
         break;
 
+    case 'painel':
+        require __DIR__ . '/view/admin/admin-painel.php';
+        break;
+
+    case 'admin-login':
+    require_once 'controller/AdminController.php';
+    AdminController::loginForm();
+    break;
+
+    case 'admin-login-processar':
+        require_once 'controller/AdminController.php';
+        AdminController::processarLogin();
+        break;
+
+    case 'admin-logout':
+        require_once 'controller/AdminController.php';
+        AdminController::logout();
+        break;
+
+    case 'painel':
+        require_once 'controller/AdminController.php';
+        AdminController::painel();
+        break;
+
+    case 'admin-servicos':
+        ServicoController::index();
+        break;
+
+    case 'admin-usuarios':
+        UsuarioController::index();
+        break;
+
+    case 'admin-agendamentos':
+        AgendamentoController::listarTodos();
+        break;
+
     case 'contratar':
         if ($subpagina === 'servico') {
             require __DIR__ . '/view/contratar-servico.php';
@@ -100,6 +136,8 @@ switch ($pagina) {
             echo "<h1>Erro 404 - Página não encontrada</h1>";
         }
         break;
+    
+    
 
     case 'servicos-admin':
         if ($subpagina === null) {
@@ -123,6 +161,8 @@ switch ($pagina) {
         }
         break;
 
+    
+
     case 'profissional':
         if ($subpagina === 'novo') {
             UsuarioController::novo();
@@ -136,6 +176,7 @@ switch ($pagina) {
         if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
             header('Location: admin-login.php');
             exit;
+            
         }
 
         $subpagina = $url[1] ?? null;
@@ -168,6 +209,18 @@ switch ($pagina) {
             default:
                 echo "<h1>Painel Admin</h1>";
                 echo "<p>Selecione uma opção.</p>";
+                break;
+            case 'agendamentos':
+                AgendamentoController::index(); // ou listarAdmin() conforme sua implementação
+                break;
+            case 'agendamentos-novo':
+                AgendamentoController::novo();
+                break;
+            case 'agendamentos-editar':
+                AgendamentoController::editar();
+                break;
+            case 'agendamentos-excluir':
+                AgendamentoController::excluir();
                 break;
         }
         break;
