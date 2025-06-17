@@ -235,21 +235,24 @@ class UsuarioController {
 
 
     public static function login() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("Erro de segurança CSRF detectado.");
+            }
+
             $email = $_POST['email'] ?? '';
             $senha = $_POST['senha'] ?? '';
             $usuario = (new Usuario())->autenticar($email, $senha);
                 
             if ($usuario) {
                 require_once __DIR__ . '/../helpers/helpers.php';
-
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['usuario']['eh_profissional'] = usuarioEhProfissional($email);
 
-                // Aqui o cookie está criado logo após a sessão e antes do redirecionamento
                 setcookie("usuario_logado", $usuario['nome'], time() + 3600, "/");
 
                 header("Location: index.php");
@@ -259,13 +262,23 @@ class UsuarioController {
                 require __DIR__ . '/../view/usuario/login.php';
             }
         } else {
+            // Gera token CSRF para o formulário de login
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             $erro = '';
             require __DIR__ . '/../view/usuario/login.php';
         }
     }
 
     public static function cadastro() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("Erro de segurança CSRF detectado.");
+            }
+
             $nome = $_POST['nome'] ?? '';
             $email = $_POST['email'] ?? '';
             $senha = $_POST['senha'] ?? '';
@@ -276,9 +289,12 @@ class UsuarioController {
             header("Location: ?url=login");
             exit;
         } else {
+            // Gera token CSRF para o formulário de cadastro
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             require __DIR__ . '/../view/usuario/cadastro.php';
         }
     }
+
 
     public static function recuperar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
