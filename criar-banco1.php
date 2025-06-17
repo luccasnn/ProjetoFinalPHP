@@ -29,14 +29,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
     senha VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) NOT NULL,
     nascimento DATE NOT NULL,
-<<<<<<< HEAD
     telefone VARCHAR(20),
     especialidade VARCHAR(100),
     descricao TEXT,
     cidade VARCHAR(100),
     eh_profissional TINYINT(1) DEFAULT 0,
-=======
->>>>>>> b16894535eda5b3bf3035618149f06904d2ede14
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

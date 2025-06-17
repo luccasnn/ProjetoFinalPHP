@@ -1,6 +1,7 @@
 <?php
 // view/servico/editar.php
 ?>
+<?php require_once __DIR__ . '/../header.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -35,6 +36,7 @@
 
         <button type="submit">Atualizar</button>
     </form>
-    <p style="text-align:center;"><a href="?url=servicos-admin">Voltar à lista</a></p>
+    <p style="text-align:center;"><a href="?url=home">Voltar ao Menu</a></p>
 </body>
+<?php require_once __DIR__ . '/../footer.php'; ?>
 </html>

@@ -2,8 +2,8 @@
 
 <p>Tem certeza que deseja excluir este agendamento?</p>
 
-<p><strong>Data:</strong> <?= htmlspecialchars($agendamento['data'] ?? '') ?></p>
-<p><strong>Hora:</strong> <?= htmlspecialchars($agendamento['hora'] ?? '') ?></p>
+<p><strong>Data:</strong> <?= htmlspecialchars($agendamento['data_agendamento'] ?? '') ?></p>
+<p><strong>Hora:</strong> <?= htmlspecialchars($agendamento['hora_agendamento'] ?? '') ?></p>
 <p><strong>Descrição:</strong> <?= htmlspecialchars($agendamento['descricao'] ?? '') ?></p>
 
 <form method="POST">

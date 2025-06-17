@@ -175,24 +175,31 @@ class AgendamentoController {
 
     public static function excluir() {
         if (!isset($_GET['id']) && !isset($_POST['id'])) {
-            header("Location: ?url=admin-agendamentos");
+            header("Location: ?url=admin/agendamentos");
             exit;
         }
 
         try {
+            // Conexão direta PDO (substitua pelos dados corretos do seu banco)
             $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $id = $_POST['id'];
+                $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+                if (!$id) {
+                    die("ID inválido.");
+                }
 
                 $stmt = $pdo->prepare("DELETE FROM agendamentos WHERE id = :id");
                 $stmt->execute([':id' => $id]);
 
-                header("Location: ?url=admin-agendamentos");
+                header("Location: ?url=admin/agendamentos&sucesso=excluido");
                 exit;
             } else {
-                $id = $_GET['id'];
+                $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+                if (!$id) {
+                    die("ID inválido.");
+                }
 
                 $stmt = $pdo->prepare("SELECT * FROM agendamentos WHERE id = :id");
                 $stmt->execute([':id' => $id]);
@@ -209,6 +216,7 @@ class AgendamentoController {
             die("Erro ao excluir agendamento: " . $e->getMessage());
         }
     }
+
 
 
 
