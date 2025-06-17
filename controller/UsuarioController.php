@@ -274,6 +274,8 @@ class UsuarioController {
             session_start();
         }
 
+        $erro = '';
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 die("Erro de segurança CSRF detectado.");
@@ -284,16 +286,30 @@ class UsuarioController {
             $senha = $_POST['senha'] ?? '';
             $cpf = $_POST['cpf'] ?? '';
             $nasc = $_POST['nascimento'] ?? '';
+
             $usuario = new Usuario();
-            $usuario->cadastrar($nome, $email, $senha, $cpf, $nasc);
-            header("Location: ?url=login");
-            exit;
-        } else {
-            // Gera token CSRF para o formulário de cadastro
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            require __DIR__ . '/../view/usuario/cadastro.php';
+
+            // Verifica se email ou CPF já existem
+            if ($usuario->existeEmail($email)) {
+                $erro = "Email já cadastrado.";
+            } elseif ($usuario->existeCpf($cpf)) {
+                $erro = "CPF já cadastrado.";
+            } else {
+                try {
+                    $usuario->cadastrar($nome, $email, $senha, $cpf, $nasc);
+                    header("Location: ?url=login");
+                    exit;
+                } catch (Exception $e) {
+                    $erro = "Erro ao cadastrar: " . $e->getMessage();
+                }
+            }
         }
+
+        // Gera token CSRF para o formulário de cadastro
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        require __DIR__ . '/../view/usuario/cadastro.php';
     }
+
 
 
     public static function recuperar() {

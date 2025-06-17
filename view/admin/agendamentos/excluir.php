@@ -11,3 +11,5 @@
     <button type="submit">Confirmar Exclusão</button>
     <a href="?url=admin-agendamentos">Cancelar</a>
 </form>
+<?php require_once __DIR__ . '/../header.php'; ?>
+<?php require_once __DIR__ . '/../footer.php'; ?>

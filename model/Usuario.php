@@ -53,5 +53,17 @@ class Usuario {
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$hash, $id]);
     }
+    public function existeEmail(string $email): bool {
+        $sql = "SELECT COUNT(*) FROM usuarios WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetchColumn() > 0;
+    }
+    public function existeCpf(string $cpf): bool {
+        $sql = "SELECT COUNT(*) FROM usuarios WHERE cpf = :cpf";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['cpf' => $cpf]);
+        return $stmt->fetchColumn() > 0;
+    }
 }
 ?>

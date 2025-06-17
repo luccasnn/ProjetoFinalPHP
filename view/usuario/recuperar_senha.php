@@ -1,29 +1,30 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Recuperar_senha</title>
-    <link rel="stylesheet" href="public/assets/style.css">
-</head>
-<body>
 <?php
-// view/usuario/recuperar_senha.php
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 
 <h2>Recuperar Senha</h2>
 <form method="POST">
-    <label>CPF:</label>
-    <input type="text" name="cpf" required><br>
-    <label>Data de Nascimento:</label>
-    <input type="date" name="nascimento" required><br>
-    <?php if (!empty($resetar)) { ?>
+    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+
+    <?php if (empty($resetar)): ?>
+        <label>CPF:</label>
+        <input type="text" name="cpf" required><br>
+
+        <label>Data de Nascimento:</label>
+        <input type="date" name="nascimento" required><br>
+
+        <button type="submit">Verificar</button>
+
+    <?php else: ?>
         <label>Nova Senha:</label>
         <input type="password" name="novaSenha" required><br>
-    <?php } ?>
-    <button type="submit">Enviar</button>
-</form>
-<?php if (!empty($erro)) echo "<p style='color:red;'>$erro</p>"; ?>
+        <button type="submit">Redefinir Senha</button>
+    <?php endif; ?>
 
-<p><a href="index.php" class="btn">← Voltar</a></p>
-</body>
-</html>
+    <?php if (!empty($erro)) echo "<p style='color:red;'>$erro</p>"; ?>
+</form>
+
+<p><a href="?url=login">← Voltar para Login</a></p>

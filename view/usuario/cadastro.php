@@ -1,5 +1,4 @@
 <?php
-// view/usuario/cadastro.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,6 +6,7 @@ if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,6 +17,13 @@ if (!isset($_SESSION['csrf_token'])) {
 <body>
 
 <h2>Cadastro de Usuário</h2>
+
+<?php if (!empty($erro)) : ?>
+    <div style="color: red; margin-bottom: 15px;">
+        <?php echo htmlspecialchars($erro); ?>
+    </div>
+<?php endif; ?>
+
 <form method="POST">
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
