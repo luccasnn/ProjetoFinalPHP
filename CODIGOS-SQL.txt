@@ -1,0 +1,12 @@
+
+"SELECT * FROM usuarios WHERE nome_usuario='$username' LIMIT 1";
+
+"SELECT * FROM servicos"
+"SELECT * FROM servicos WHERE fornecedor_id='$idFornecedor'"
+"SELECT * FROM servicos WHERE id=$id"
+"UPDATE servicos SET fornecedor_id=$idFornecedor, titulo='$titulo', preco=$preco WHERE id='$idServico'"
+
+"SELECT * FROM fornecedores"
+"INSERT INTO fornecedores (nome_empresa, telefone_principal, email_principal, endereco) VALUES ('$nome','$tel','$email','$end')"
+"DELETE FROM fornecedores WHERE id='$idFornecedor'"
+
