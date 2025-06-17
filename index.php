@@ -1,5 +1,5 @@
 <?php
-if (!isset($_SESSION)) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
@@ -14,18 +14,17 @@ require_once __DIR__ . '/config/banco.php';
 require_once __DIR__ . '/controller/UsuarioController.php';
 require_once __DIR__ . '/controller/FeedbackController.php';
 require_once __DIR__ . '/controller/ServicoController.php';
-require_once __DIR__ . '/controller/AgendamentoController.php'; // Certifique-se de incluir se usar
+require_once __DIR__ . '/controller/AgendamentoController.php';
 
+// AdminController é carregado só onde precisa para evitar overhead
 // Roteamento
 $url = $_GET['url'] ?? 'home';
 
-// Permite URLs com hífen: substitui '-' por '/'
-//$url = str_replace('-', '/', $url);
-
+// Explode a URL para pegar páginas e subpáginas
 $url = explode("/", $url);
-
 $pagina = $url[0];
 $subpagina = $url[1] ?? null;
+$param = $url[2] ?? null;
 
 switch ($pagina) {
     case 'home':
@@ -50,7 +49,7 @@ switch ($pagina) {
                 case 'excluir':
                     ServicoController::excluir();
                     break;
-                case 'admin':  // Se precisar deste caso, mantenha
+                case 'admin':
                     ServicoController::index();
                     break;
                 default:
@@ -69,7 +68,7 @@ switch ($pagina) {
             $detalhes = filter_input(INPUT_POST, 'detalhes', FILTER_SANITIZE_STRING);
 
             if ($nome && $email && $servicoId) {
-                // TODO: Salvar no banco ou enviar email
+                // TODO: salvar no banco ou enviar email
                 echo "<h1>Pedido enviado com sucesso!</h1>";
                 echo "<p>Obrigado, $nome. Entraremos em contato em breve pelo e-mail $email.</p>";
                 echo "<a href='?url=home'>Voltar para a página inicial</a>";
@@ -92,42 +91,6 @@ switch ($pagina) {
         }
         break;
 
-    case 'painel':
-        require __DIR__ . '/view/admin/admin-painel.php';
-        break;
-
-    case 'admin-login':
-    require_once 'controller/AdminController.php';
-    AdminController::loginForm();
-    break;
-
-    case 'admin-login-processar':
-        require_once 'controller/AdminController.php';
-        AdminController::processarLogin();
-        break;
-
-    case 'admin-logout':
-        require_once 'controller/AdminController.php';
-        AdminController::logout();
-        break;
-
-    case 'painel':
-        require_once 'controller/AdminController.php';
-        AdminController::painel();
-        break;
-
-    case 'admin-servicos':
-        ServicoController::index();
-        break;
-
-    case 'admin-usuarios':
-        UsuarioController::index();
-        break;
-
-    case 'admin-agendamentos':
-        AgendamentoController::listarTodos();
-        break;
-
     case 'contratar':
         if ($subpagina === 'servico') {
             require __DIR__ . '/view/contratar-servico.php';
@@ -136,50 +99,40 @@ switch ($pagina) {
             echo "<h1>Erro 404 - Página não encontrada</h1>";
         }
         break;
-    
-    
 
-    case 'servicos-admin':
-        if ($subpagina === null) {
-            ServicoController::index();
-        } else {
-            switch ($subpagina) {
-                case 'novo':
-                    ServicoController::novo();
-                    break;
-                case 'editar':
-                    ServicoController::editar();
-                    break;
-                case 'excluir':
-                    ServicoController::excluir();
-                    break;
-                default:
-                    http_response_code(404);
-                    echo "<h1>Erro 404 - Página não encontrada</h1>";
-                    break;
-            }
+    case 'painel':
+        // Proteção da área admin (exemplo, ajustar conforme sua lógica)
+        if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
+            header('Location: ?url=admin-login');
+            exit;
         }
+        require __DIR__ . '/view/admin/admin-painel.php';
         break;
 
-    
+    case 'admin-login':
+        require_once __DIR__ . '/controller/AdminController.php';
+        AdminController::loginForm();
+        break;
 
-    case 'profissional':
-        if ($subpagina === 'novo') {
-            UsuarioController::novo();
-        } else {
-            echo "<h1>Erro 404 - Página não encontrada</h1>";
-        }
+    case 'admin-login-processar':
+        require_once __DIR__ . '/controller/AdminController.php';
+        AdminController::processarLogin();
+        break;
+
+    case 'admin-logout':
+        require_once __DIR__ . '/controller/AdminController.php';
+        AdminController::logout();
         break;
 
     case 'admin':
-        // Proteção da área admin:
         if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
-            header('Location: admin-login.php');
+            header('Location: ?url=admin-login');
             exit;
-            
         }
 
         $subpagina = $url[1] ?? null;
+
+        require_once __DIR__ . '/controller/AdminController.php';
 
         switch ($subpagina) {
             case 'servicos':
@@ -206,12 +159,8 @@ switch ($pagina) {
             case 'usuarios-excluir':
                 UsuarioController::excluir();
                 break;
-            default:
-                echo "<h1>Painel Admin</h1>";
-                echo "<p>Selecione uma opção.</p>";
-                break;
             case 'agendamentos':
-                AgendamentoController::index(); // ou listarAdmin() conforme sua implementação
+                AgendamentoController::index();
                 break;
             case 'agendamentos-novo':
                 AgendamentoController::novo();
@@ -222,13 +171,52 @@ switch ($pagina) {
             case 'agendamentos-excluir':
                 AgendamentoController::excluir();
                 break;
+            default:
+                echo "<h1>Painel Admin</h1>";
+                echo "<p>Selecione uma opção.</p>";
+                break;
+        }
+        break;
+
+    case 'admin-servicos':
+        ServicoController::index();
+        break;
+
+    case 'admin-usuarios':
+        UsuarioController::index();
+        break;
+    
+
+    case 'admin-agendamentos':
+        AgendamentoController::listarTodos();
+        break;
+
+    case 'admin-usuarios-editar':
+        UsuarioController::editar();
+        break;
+
+    case 'admin-usuarios-excluir':
+        UsuarioController::excluir();
+        break;
+
+    case 'admin-agendamentos-editar':
+        AgendamentoController::editar();
+        break;
+
+    case 'admin-agendamentos-excluir':
+        AgendamentoController::excluir();
+        break;
+
+    case 'profissional':
+        if ($subpagina === 'novo') {
+            UsuarioController::novo();
+        } else {
+            http_response_code(404);
+            echo "<h1>Erro 404 - Página não encontrada</h1>";
         }
         break;
 
     case 'agendamento':
-        $subpagina = $url[1] ?? null;
-        $param = $url[2] ?? null;
-
         switch ($subpagina) {
             case null:
             case 'servicos':

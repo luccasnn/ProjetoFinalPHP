@@ -143,6 +143,80 @@ class UsuarioController {
 
     require __DIR__ . '/../view/profissional/novo.php';
     }
+    public static function excluir() {
+        if (!isset($_GET['id'])) {
+            header("Location: ?url=admin-usuarios");
+            exit;
+        }
+
+        $id = $_GET['id'];
+
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+
+        } catch (PDOException $e) {
+            die("Erro ao excluir usuário: " . $e->getMessage());
+        }
+
+        header("Location: ?url=admin-usuarios");
+        exit;
+    }
+    public static function editar() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['usuario'])) {
+            header("Location: ?url=login");
+            exit;
+        }
+
+        if (!isset($_GET['id'])) {
+            echo "ID do usuário não fornecido.";
+            exit;
+        }
+
+        $id = $_GET['id'];
+
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $nome = $_POST['nome'] ?? '';
+                $email = $_POST['email'] ?? '';
+
+                $stmt = $pdo->prepare("UPDATE usuarios SET nome = :nome, email = :email WHERE id = :id");
+                $stmt->execute([
+                    ':nome' => $nome,
+                    ':email' => $email,
+                    ':id' => $id
+                ]);
+
+                header("Location: ?url=admin-usuarios");
+                exit;
+            }
+
+            $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$usuario) {
+                echo "Usuário não encontrado.";
+                exit;
+            }
+
+            require __DIR__ . '/../view/admin/usuarios/editar.php';
+
+        } catch (PDOException $e) {
+            echo "Erro no banco: " . $e->getMessage();
+        }
+    }
+
 
     public static function index() {
         try {
@@ -160,33 +234,6 @@ class UsuarioController {
     }
 
 
-    // public static function login() {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $email = $_POST['email'] ?? '';
-    //         $senha = $_POST['senha'] ?? '';
-    //         $usuario = (new Usuario())->autenticar($email, $senha);
-                
-    //         if ($usuario) {
-    //             require_once __DIR__ . '/../helpers/helpers.php';
-
-    //             if (session_status() === PHP_SESSION_NONE) {
-    //                 session_start();
-    //             }
-    //             $_SESSION['usuario'] = $usuario;
-    //             $_SESSION['usuario']['eh_profissional'] = usuarioEhProfissional($email);
-
-    //             setcookie("usuario_logado", $usuario['nome'], time() + 3600, "/");
-    //             header("Location: index.php");
-    //             exit;
-    //         } else {
-    //             $erro = "Usuário ou senha inválidos.";
-    //             require __DIR__ . '/../view/usuario/login.php';
-    //         }
-    //     } else {
-    //         $erro = '';
-    //         require __DIR__ . '/../view/usuario/login.php';
-    //     }
-    // }
     public static function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';

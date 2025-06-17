@@ -182,3 +182,14 @@ a:visited {
   height: auto;
   border-radius: 6px;
 }
+.admin-links {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* espaço entre os itens */
+}
+.admin-links li {
+  /* Se quiser, pode centralizar texto do link */
+  text-align: center;
+}

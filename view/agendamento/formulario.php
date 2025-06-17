@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../header.php'; ?>
 <h1>Agendar serviço: <?= htmlspecialchars($servico['titulo']) ?></h1>
 
 <form method="POST" action="?url=agendamento/salvar">
@@ -10,3 +11,5 @@
     </label><br><br>
     <button type="submit">Agendar</button>
 </form>
+
+<?php require_once __DIR__ . '/../footer.php'; ?>

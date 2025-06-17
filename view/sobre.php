@@ -76,7 +76,8 @@
         Nosso propósito é oferecer uma solução funcional, responsiva e didática, tanto para fins educacionais quanto para simular o funcionamento de um sistema real de intermediação de serviços.
     </p>
 
-    <a href="/ProjetoFinalPHP/index.php" class="btn-voltar">Voltar à Página Inicial</a>
+    <a href="/ProPulse/ProPulse/index.php?url=home" class="btn-voltar">Voltar à Página Inicial</a>
+
 </div>
 
 </body>

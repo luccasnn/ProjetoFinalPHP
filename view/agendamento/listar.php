@@ -1,4 +1,7 @@
 <h1>Meus Agendamentos</h1>
+<?php require_once __DIR__ . '/../header.php'; ?>
+
+<p><a href="index.php?url=home" style="text-decoration:none; color: blue;">&larr; Voltar para o início</a></p>
 
 <?php if (empty($agendamentos)): ?>
     <p>Você não possui agendamentos.</p>
@@ -23,4 +26,5 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <?php require_once __DIR__ . '/../footer.php'; ?>
 <?php endif; ?>

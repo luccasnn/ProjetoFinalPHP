@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Usuário: <input type="text" name="usuario" required></label><br><br>
         <label>Senha: <input type="password" name="senha" required></label><br><br>
         <button type="submit">Entrar</button>
+        
     </form>
 </body>
 </html>

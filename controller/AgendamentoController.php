@@ -81,11 +81,22 @@ class AgendamentoController {
             echo "<h1>Método não permitido.</h1>";
         }
     }
-    public function listarTodos() {
-        $sql = "SELECT * FROM agendamentos ORDER BY data_agendamento DESC, hora_agendamento DESC";
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public static function listarTodos() {
+        $conn = Banco::getConn(); // retorna objeto mysqli
+
+        $resultado = $conn->query("SELECT * FROM agendamentos ORDER BY data_agendamento DESC, hora_agendamento DESC");
+        if (!$resultado) {
+            die("Erro na consulta: " . $conn->error);
+        }
+
+        $agendamentos = [];
+        while ($row = $resultado->fetch_assoc()) {
+            $agendamentos[] = $row;
+        }
+        return $agendamentos;
     }
+
+
 
     public static function listarAgendamentosUsuario() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -106,12 +117,91 @@ class AgendamentoController {
             echo "<h1>Erro: arquivo de visualização não encontrado.</h1>";
         }
     }
+    public static function editar() {
+        if (!isset($_GET['id'])) {
+            header("Location: ?url=admin-agendamentos");
+            exit;
+        }
 
-    public static function excluir($id) {
-        $agendamentoModel = new Agendamento();
-        $agendamentoModel->excluir($id);
-        header("Location: ?url=admin-agendamentos");
-        exit;
+        $id = $_GET['id'];
+        $conn = Banco::getConn();
+
+        // Buscar agendamento
+        $stmt = $conn->prepare("SELECT * FROM agendamentos WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $agendamento = $resultado->fetch_assoc();
+
+        if (!$agendamento) {
+            header("Location: ?url=admin-agendamentos&erro=agendamento_nao_encontrado");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $usuario_id = $_POST['usuario_id'] ?? '';
+            $servico_id = $_POST['servico_id'] ?? '';
+            $data_agendamento = $_POST['data_agendamento'] ?? '';
+            $hora_agendamento = $_POST['hora_agendamento'] ?? '';
+            $status = $_POST['status'] ?? '';
+
+            // Aqui, se quiser, pode validar usuario e serviço com consultas mysqli, ou só pule pra update.
+
+            $stmt = $conn->prepare("UPDATE agendamentos SET usuario_id = ?, servico_id = ?, data_agendamento = ?, hora_agendamento = ?, status = ? WHERE id = ?");
+            $stmt->bind_param("iisssi", $usuario_id, $servico_id, $data_agendamento, $hora_agendamento, $status, $id);
+            $stmt->execute();
+
+            header("Location: ?url=admin/agendamentos&sucesso=editado");
+
+            exit;
+        }
+
+        require __DIR__ . '/../view/admin/agendamentos/editar.php';
     }
+
+    public static function excluir() {
+        if (!isset($_GET['id']) && !isset($_POST['id'])) {
+            header("Location: ?url=admin-agendamentos");
+            exit;
+        }
+
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id = $_POST['id'];
+
+                $stmt = $pdo->prepare("DELETE FROM agendamentos WHERE id = :id");
+                $stmt->execute([':id' => $id]);
+
+                header("Location: ?url=admin-agendamentos");
+                exit;
+            } else {
+                $id = $_GET['id'];
+
+                $stmt = $pdo->prepare("SELECT * FROM agendamentos WHERE id = :id");
+                $stmt->execute([':id' => $id]);
+                $agendamento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$agendamento) {
+                    die("Agendamento não encontrado.");
+                }
+
+                require __DIR__ . '/../view/admin/agendamentos/excluir.php';
+            }
+
+        } catch (PDOException $e) {
+            die("Erro ao excluir agendamento: " . $e->getMessage());
+        }
+    }
+
+
+
+
+
+
+    
+    
 }
 ?>

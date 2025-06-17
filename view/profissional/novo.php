@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php require_once __DIR__ . '/../header.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,21 +32,3 @@
 </html>
 
 <?php require_once __DIR__ . '/../footer.php'; ?>
-=======
-<?php
-// view/profissional/novo.php
-?>
-
-<h2>Novo Profissional</h2>
-<form method="POST">
-    <label>Nome:</label><input type="text" name="nome" required><br>
-    <label>Email:</label><input type="email" name="email" required><br>
-    <label>Telefone:</label><input type="text" name="telefone"><br>
-    <label>Especialidade:</label><input type="text" name="especialidade"><br>
-    <label>Descrição:</label><textarea name="descricao"></textarea><br>
-    <label>Cidade:</label><input type="text" name="cidade"><br>
-    <button type="submit">Salvar</button>
-</form>
-
-<p><a href="index.php" class="btn">← Voltar</a></p>
->>>>>>> b16894535eda5b3bf3035618149f06904d2ede14
