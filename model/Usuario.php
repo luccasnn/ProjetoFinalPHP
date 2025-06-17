@@ -65,5 +65,7 @@ class Usuario {
         $stmt->execute(['cpf' => $cpf]);
         return $stmt->fetchColumn() > 0;
     }
+   
+
 }
 ?>

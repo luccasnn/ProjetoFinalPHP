@@ -313,25 +313,57 @@ class UsuarioController {
 
 
     public static function recuperar() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $erro = '';
+        $resetar = false;
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $cpf = $_POST['cpf'] ?? '';
-            $nasc = $_POST['nascimento'] ?? '';
-            $usuario = (new Usuario())->recuperarSenha($cpf, $nasc);
-            if ($usuario) {
-                $nova = $_POST['novaSenha'] ?? '';
-                if (!empty($nova)) {
-                    (new Usuario())->atualizarSenha($usuario['id'], $nova);
-                    header("Location: ?url=login");
-                    exit;
+            // Proteção CSRF
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("Erro de segurança CSRF.");
+            }
+
+            if (!isset($_SESSION['recuperando_usuario_id'])) {
+                // Primeira etapa: verificar CPF + nascimento
+                $cpf = $_POST['cpf'] ?? '';
+                $nasc = $_POST['nascimento'] ?? '';
+
+                $usuario = (new Usuario())->recuperarSenha($cpf, $nasc);
+
+                if ($usuario) {
+                    $_SESSION['recuperando_usuario_id'] = $usuario['id'];
+                    $resetar = true;
                 } else {
+                    $erro = "Dados não encontrados.";
+                }
+
+                // Exibir form com mensagem
+                require __DIR__ . '/../view/usuario/recuperar_senha.php';
+
+            } else {
+                // Segunda etapa: redefinir senha
+                $novaSenha = $_POST['novaSenha'] ?? '';
+
+                if (strlen($novaSenha) < 4) {
+                    $erro = "A nova senha deve ter ao menos 4 caracteres.";
                     $resetar = true;
                     require __DIR__ . '/../view/usuario/recuperar_senha.php';
+                } else {
+                    $id = $_SESSION['recuperando_usuario_id'];
+
+                    (new Usuario())->atualizarSenha($id, $novaSenha);
+
+                    unset($_SESSION['recuperando_usuario_id']);
+                    header("Location: ?url=login");
+                    exit;
                 }
-            } else {
-                $erro = "Dados não encontrados.";
-                require __DIR__ . '/../view/usuario/recuperar_senha.php';
             }
         } else {
+            // GET: mostrar form para digitar CPF + nascimento
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             require __DIR__ . '/../view/usuario/recuperar_senha.php';
         }
     }

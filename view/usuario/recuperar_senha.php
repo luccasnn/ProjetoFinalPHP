@@ -1,30 +1,23 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) session_start();
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
+<?php if (!empty($erro)): ?>
+    <div style="color: red;"><?php echo htmlspecialchars($erro); ?></div>
+<?php endif; ?>
 
-<h2>Recuperar Senha</h2>
-<form method="POST">
-    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-
-    <?php if (empty($resetar)): ?>
-        <label>CPF:</label>
-        <input type="text" name="cpf" required><br>
-
-        <label>Data de Nascimento:</label>
-        <input type="date" name="nascimento" required><br>
-
-        <button type="submit">Verificar</button>
-
-    <?php else: ?>
+<?php if ($resetar): ?>
+    <!-- Form para nova senha -->
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <label>Nova Senha:</label>
-        <input type="password" name="novaSenha" required><br>
-        <button type="submit">Redefinir Senha</button>
-    <?php endif; ?>
-
-    <?php if (!empty($erro)) echo "<p style='color:red;'>$erro</p>"; ?>
-</form>
-
-<p><a href="?url=login">← Voltar para Login</a></p>
+        <input type="password" name="novaSenha" required minlength="4">
+        <button type="submit">Redefinir senha</button>
+    </form>
+<?php else: ?>
+    <!-- Form para CPF + nascimento -->
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <label>CPF:</label>
+        <input type="text" name="cpf" required>
+        <label>Data de Nascimento:</label>
+        <input type="date" name="nascimento" required>
+        <button type="submit">Verificar</button>
+    </form>
+<?php endif; ?>
