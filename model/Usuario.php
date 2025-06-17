@@ -8,8 +8,14 @@ class Usuario {
     private $pdo;
 
     public function __construct() {
-        $this->pdo = new PDO("mysql:host=localhost;dbname=banco-prova", "root", "");
+        // Use PDO para conectar, com configurações que você desejar
+        $this->pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+    public function listarTodos() {
+        $stmt = $this->pdo->query("SELECT * FROM usuarios");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Cadastra novo usuário

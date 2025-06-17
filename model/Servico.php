@@ -11,6 +11,12 @@ class Servico {
         $this->pdo = new PDO("mysql:host=localhost;dbname=banco-prova", "root", "");
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
+    
+
+    public function listarTodos() {
+        $stmt = $this->pdo->query("SELECT * FROM servicos"); // Ajuste o nome da tabela, se for diferente
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function listar() {
         $stmt = $this->pdo->query("SELECT * FROM servicos ORDER BY titulo");

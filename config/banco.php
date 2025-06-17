@@ -1,18 +1,17 @@
 <?php
-// config/banco.php
-// Classe abstrata para conexão única com o banco 'banco-prova'
-abstract class Banco {
-    private static $conn;
+class Banco {
+    private static $pdo;
 
-    public static function getConn() {
-        if (!isset(self::$conn)) {
-            self::$conn = new mysqli("localhost", "root", "", "banco-prova");
-            if (self::$conn->connect_error) {
-                die("Erro ao conectar ao banco: " . self::$conn->connect_error);
+    public static function getConexao() {
+        if (!isset(self::$pdo)) {
+            try {
+                self::$pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die("Erro ao conectar ao banco de dados: " . $e->getMessage());
             }
-            self::$conn->set_charset("utf8mb4");
         }
-        return self::$conn;
+        return self::$pdo;
     }
 }
 ?>

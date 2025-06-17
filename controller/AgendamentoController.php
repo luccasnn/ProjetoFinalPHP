@@ -118,23 +118,21 @@ class AgendamentoController {
         }
     }
     public static function editar() {
+        $usuarioModel = new Usuario();
+        $usuarios = $usuarioModel->listarTodos();
+        $servicoModel = new Servico();
+        $servicos = $servicoModel->listarTodos();   
         if (!isset($_GET['id'])) {
-            header("Location: ?url=admin-agendamentos");
+            header("Location: ?url=admin/agendamentos");
             exit;
         }
 
         $id = $_GET['id'];
-        $conn = Banco::getConn();
-
-        // Buscar agendamento
-        $stmt = $conn->prepare("SELECT * FROM agendamentos WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        $agendamento = $resultado->fetch_assoc();
+        $agendamentoModel = new Agendamento();
+        $agendamento = $agendamentoModel->buscar($id);
 
         if (!$agendamento) {
-            header("Location: ?url=admin-agendamentos&erro=agendamento_nao_encontrado");
+            header("Location: ?url=admin/agendamentos&erro=agendamento_nao_encontrado");
             exit;
         }
 
@@ -145,19 +143,35 @@ class AgendamentoController {
             $hora_agendamento = $_POST['hora_agendamento'] ?? '';
             $status = $_POST['status'] ?? '';
 
-            // Aqui, se quiser, pode validar usuario e serviço com consultas mysqli, ou só pule pra update.
+            try {
+                $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("UPDATE agendamentos SET usuario_id = ?, servico_id = ?, data_agendamento = ?, hora_agendamento = ?, status = ? WHERE id = ?");
-            $stmt->bind_param("iisssi", $usuario_id, $servico_id, $data_agendamento, $hora_agendamento, $status, $id);
-            $stmt->execute();
+                $stmt = $pdo->prepare("UPDATE agendamentos 
+                    SET usuario_id = :usuario_id, servico_id = :servico_id, 
+                        data_agendamento = :data, hora_agendamento = :hora, status = :status 
+                    WHERE id = :id");
 
-            header("Location: ?url=admin/agendamentos&sucesso=editado");
+                $stmt->execute([
+                    ':usuario_id' => $usuario_id,
+                    ':servico_id' => $servico_id,
+                    ':data' => $data_agendamento,
+                    ':hora' => $hora_agendamento,
+                    ':status' => $status,
+                    ':id' => $id
+                ]);
 
-            exit;
+                header("Location: ?url=admin/agendamentos&sucesso=editado");
+                exit;
+
+            } catch (PDOException $e) {
+                die("Erro ao atualizar agendamento: " . $e->getMessage());
+            }
         }
 
         require __DIR__ . '/../view/admin/agendamentos/editar.php';
     }
+
 
     public static function excluir() {
         if (!isset($_GET['id']) && !isset($_POST['id'])) {
