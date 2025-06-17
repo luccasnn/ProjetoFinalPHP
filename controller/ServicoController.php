@@ -17,6 +17,10 @@ class ServicoController {
         }
         require __DIR__ . '/../view/servico/novo.php';
     }
+    public function listarTodos() {
+        $stmt = $this->pdo->query("SELECT * FROM servicos");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public static function editar() {
         $id = isset($_GET['id']) ? intval($_GET['id']) : null;
@@ -48,6 +52,11 @@ class ServicoController {
         }
         header("Location: ?url=servicos");
         exit;
+    }
+    public static function contratar() {
+        $servicoModel = new Servico();
+        $servicos = $servicoModel->listarTodos(); // Deve retornar também o campo 'icone'
+        require_once __DIR__ . '/../view/servico/contratar.php';
     }
 
 }

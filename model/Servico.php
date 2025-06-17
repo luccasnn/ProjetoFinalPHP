@@ -13,10 +13,17 @@ class Servico {
     }
     
 
+    // public function listarTodos() {
+    //     $stmt = $this->pdo->query("SELECT * FROM servicos"); // Ajuste o nome da tabela, se for diferente
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
     public function listarTodos() {
-        $stmt = $this->pdo->query("SELECT * FROM servicos"); // Ajuste o nome da tabela, se for diferente
+        $sql = "SELECT id, titulo, icone FROM servicos";
+        $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function listar() {
         $stmt = $this->pdo->query("SELECT * FROM servicos ORDER BY titulo");
