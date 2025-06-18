@@ -3,25 +3,23 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Exemplo simples: se o login for submetido (POST), cria cookies
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Aqui você faria a autenticação normalmente, exemplo:
+    
     $email = $_POST['email'] ?? '';
     $senha = $_POST['senha'] ?? '';
 
-    // Supondo que usuário seja validado aqui (você deve adaptar)
-    $usuarioValido = true; // troque pela sua validação
+    
+    $usuarioValido = true; 
 
     if ($usuarioValido) {
-        // Cria cookie para lembrar o email por 30 dias
+        
         setcookie('usuario_logado', $email, time() + 60 * 60 * 24 * 30, '/');
 
-        // Cria o novo cookie extra que você quer (exemplo: 'ultimo_acesso' com timestamp)
+        
         setcookie('ultimo_acesso', date('Y-m-d H:i:s'), time() + 60 * 60 * 24 * 30, '/');
 
-        // Redirecionar, iniciar sessão, etc.
-        // header('Location: index.php');
-        // exit;
+        
     } else {
         $erro = "Usuário ou senha inválidos.";
     }

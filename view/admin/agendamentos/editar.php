@@ -1,7 +1,7 @@
 <h2>Editar Agendamento #<?= htmlspecialchars($agendamento['id'] ?? '') ?></h2>
 
 <form method="post">
-    <?php require_once __DIR__ . '/../header.php'; ?>
+    
     <label>Data:<br>
         <input type="date" name="data_agendamento" value="<?= htmlspecialchars($agendamento['data_agendamento'] ?? '') ?>" required>
     </label><br><br>
@@ -31,6 +31,6 @@
 
     <button type="submit">Salvar</button>
     <a href="?url=admin/agendamentos">Cancelar</a>
-    <?php require_once __DIR__ . '/../footer.php'; ?>
+    
 </form>
 

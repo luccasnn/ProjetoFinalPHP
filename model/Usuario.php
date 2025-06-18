@@ -12,6 +12,15 @@ class Usuario {
         $this->pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
+    public function excluir($usuarioId) {
+        if ($this->temAgendamentos($usuarioId)) {
+            throw new Exception("Não é possível excluir o usuário pois ele possui agendamentos.");
+        }
+
+        $sql = "DELETE FROM usuarios WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$usuarioId]);
+    }
 
     public function listarTodos() {
         $stmt = $this->pdo->query("SELECT * FROM usuarios");

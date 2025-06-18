@@ -68,10 +68,18 @@ class Servico {
 
 
 
-    public function excluir($id) {
-        $stmt = $this->pdo->prepare("DELETE FROM servicos WHERE id = ?");
-        return $stmt->execute([$id]);
+    public function excluir($servicoId) {
+    // Verificar se o serviço está em uso em agendamentos
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM agendamentos WHERE servico_id = ?");
+        $stmt->execute([$servicoId]);
 
+        if ($stmt->fetchColumn() > 0) {
+            throw new Exception("Não é possível excluir este serviço, pois ele está associado a agendamentos.");
+        }
+
+        // Excluir se não estiver em uso
+        $stmt = $this->pdo->prepare("DELETE FROM servicos WHERE id = ?");
+        return $stmt->execute([$servicoId]);
     }
     public static function buscarTodos() {
         global $pdo;

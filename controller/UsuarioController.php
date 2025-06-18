@@ -143,6 +143,7 @@ class UsuarioController {
 
     require __DIR__ . '/../view/profissional/novo.php';
     }
+    
     public static function excluir() {
         if (!isset($_GET['id'])) {
             header("Location: ?url=admin-usuarios");
@@ -155,6 +156,18 @@ class UsuarioController {
             $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            // Verifica se há agendamentos vinculados ao usuário
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM agendamentos WHERE usuario_id = :id");
+            $stmt->execute([':id' => $id]);
+            $temAgendamentos = $stmt->fetchColumn();
+
+            if ($temAgendamentos > 0) {
+                echo "<p>Não é possível excluir o usuário. Existem agendamentos vinculados a ele.</p>";
+                echo "<a href='?url=admin/usuarios'>Voltar</a>";
+                exit;
+            }
+
+            // Se não houver agendamentos, realiza a exclusão
             $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = :id");
             $stmt->execute([':id' => $id]);
 

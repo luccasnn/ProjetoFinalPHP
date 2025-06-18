@@ -82,19 +82,17 @@ class AgendamentoController {
         }
     }
     public static function listarTodos() {
-        $conn = Banco::getConn(); // retorna objeto mysqli
+        $agendamentoModel = new Agendamento();
+        $agendamentos = $agendamentoModel->listarTodos(); // delega ao model corretamente
 
-        $resultado = $conn->query("SELECT * FROM agendamentos ORDER BY data_agendamento DESC, hora_agendamento DESC");
-        if (!$resultado) {
-            die("Erro na consulta: " . $conn->error);
+        $viewPath = __DIR__ . '/../view/admin/agendamentos/index.php';
+        if (file_exists($viewPath)) {
+            require $viewPath;
+        } else {
+            echo "<h1>Erro: arquivo de visualização não encontrado.</h1>";
         }
-
-        $agendamentos = [];
-        while ($row = $resultado->fetch_assoc()) {
-            $agendamentos[] = $row;
-        }
-        return $agendamentos;
     }
+
 
 
 
@@ -175,31 +173,24 @@ class AgendamentoController {
 
     public static function excluir() {
         if (!isset($_GET['id']) && !isset($_POST['id'])) {
-            header("Location: ?url=admin/agendamentos");
+            header("Location: ?url=admin-agendamentos");
             exit;
         }
 
         try {
-            // Conexão direta PDO (substitua pelos dados corretos do seu banco)
             $pdo = new PDO("mysql:host=localhost;dbname=banco-prova;charset=utf8", "root", "");
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-                if (!$id) {
-                    die("ID inválido.");
-                }
+                $id = $_POST['id'];
 
                 $stmt = $pdo->prepare("DELETE FROM agendamentos WHERE id = :id");
                 $stmt->execute([':id' => $id]);
 
-                header("Location: ?url=admin/agendamentos&sucesso=excluido");
+                header("Location: ?url=admin-agendamentos");
                 exit;
             } else {
-                $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                if (!$id) {
-                    die("ID inválido.");
-                }
+                $id = $_GET['id'];
 
                 $stmt = $pdo->prepare("SELECT * FROM agendamentos WHERE id = :id");
                 $stmt->execute([':id' => $id]);
@@ -216,14 +207,5 @@ class AgendamentoController {
             die("Erro ao excluir agendamento: " . $e->getMessage());
         }
     }
-
-
-
-
-
-
-
-    
-    
 }
 ?>
